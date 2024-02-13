@@ -1,0 +1,16 @@
+#!/bin/bash
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root"
+    exit
+fi
+loc="/sys/power/mem_sleep"
+line=$(<"$loc")
+if [ "${line:0:1}" = "[" ]; then
+    echo "deep" >"$loc"
+    echo $(cat "$loc")
+    echo "Enabled deep suspend mode"
+else
+    echo "s2idle" >"$loc"
+    echo $(cat "$loc")
+    echo "Enabled standard suspend mode"
+fi
